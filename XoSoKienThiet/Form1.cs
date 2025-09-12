@@ -181,14 +181,14 @@ namespace XoSoKienThiet
 
                         foreach (Match match in regex.Matches(description))
                         {
-                            string prizeName = match.Groups[1].Value;
-                            string prizeNumbersString = match.Groups[2].Value;
+                            string prizeName = match.Groups[1].Value.Trim();
+                            string prizeNumbersString = match.Groups[2].Value.Trim();
                             string copyP = prizeNumbersString;
                             int idx = prizeNumbersString.IndexOf(':');
                             if(idx>0)
                             {
                                 prizeNumbersString= prizeNumbersString.Substring(0, idx-1).Trim();
-                                outPrize=  copyP.Substring(idx-1);
+                                outPrize=  copyP.Substring(idx-1).Trim();
                             }
 
                             // Tách các số nếu có nhiều số trong một giải (ví dụ giải 3, 4)
@@ -248,8 +248,19 @@ namespace XoSoKienThiet
         {
             foreach (var kvp in lotteryResults)
             {
-                if (kvp.Value.Any(n => n.EndsWith(playerNumber)))
+                kvp.Value.Any((n) =>
+                {
+                    Debug.WriteLine($"'{n}' and '{playerNumber}'");
+                    return playerNumber.EndsWith(n);
+                });
+                if (kvp.Value.Any(n => playerNumber.EndsWith(n)))
+                {
+
+                    
+                    
                     return kvp.Key;
+                }    
+                    
             }
             return null;
         }
